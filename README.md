@@ -15,6 +15,8 @@ Use arrow keys (desktop) or on-screen touch buttons (mobile) to move the snake:
 
 The snake wraps around the edges. The game ends if the snake hits an obstacle (gray) or its own body. Score increases by eating red food squares.
 
+When you complete a level a message appears with a button to proceed. After level 5 you receive a champion message and can restart.
+
 ## Levels
 
 - Levels 1 to 5 with increasing difficulty.

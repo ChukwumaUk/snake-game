@@ -21,6 +21,7 @@ const foodPerLevel = 5;
 let speed = 150; // milliseconds between moves
 let intervalId;
 let gameStarted = false;
+let waitingForNextLevel = false; // pause while showing level message
 
 // Initialize the snake as an array of segments, starting with one segment at position (10,10)
 let snake = [{x: 10, y: 10}];
@@ -98,10 +99,36 @@ function drawGame() {
         ctx.fillRect(obs.x * gridSize, obs.y * gridSize, gridSize - 2, gridSize - 2);
     }
 
-    // Draw the snake segments in lime color
+    // Draw the snake segments in lime color; head is special
     ctx.fillStyle = 'lime';
-    for (let segment of snake) {
-        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+    for (let i = 0; i < snake.length; i++) {
+        const segment = snake[i];
+        const x = segment.x * gridSize;
+        const y = segment.y * gridSize;
+        if (i === 0) {
+            // head: circle with eyes pointing direction
+            const cx = x + gridSize/2;
+            const cy = y + gridSize/2;
+            const r = gridSize/2 - 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI*2);
+            ctx.fill();
+            // eyes
+            ctx.fillStyle = 'black';
+            const eyeOffset = r/2;
+            let ex = cx, ey = cy;
+            if (dx === 1) { ex += eyeOffset; ey -= eyeOffset; }
+            else if (dx === -1) { ex -= eyeOffset; ey -= eyeOffset; }
+            else if (dy === 1) { ex += eyeOffset; ey += eyeOffset; }
+            else if (dy === -1) { ex -= eyeOffset; ey -= eyeOffset; }
+            ctx.beginPath();
+            ctx.arc(ex, ey, 2, 0, Math.PI*2);
+            ctx.arc(ex + (dx!==0?0:4), ey + (dy!==0?0:4), 2, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = 'lime';
+        } else {
+            ctx.fillRect(x, y, gridSize - 2, gridSize - 2);
+        }
     }
 
     // Draw the food in red color
@@ -135,7 +162,7 @@ function moveSnake() {
 
         // Check for level up
         if (score % foodPerLevel === 0) {
-            levelUp();
+            showLevelComplete();
         }
     } else {
         // Remove the tail segment if no food was eaten
@@ -161,22 +188,35 @@ function checkCollision() {
     return false;
 }
 
-// Function to level up the game
-function levelUp() {
+// advance to the next level after overlay confirm
+function advanceLevel() {
     playLevelUpSound();
+    waitingForNextLevel = false;
+    document.getElementById('messageOverlay').style.display = 'none';
     if (currentLevel < 5) {
         currentLevel++;
-        speed = Math.max(50, speed - 20); // Decrease interval for faster speed, minimum 50ms
+        speed = Math.max(50, speed - 20);
         clearInterval(intervalId);
         intervalId = setInterval(gameLoop, speed);
         numObstacles = currentLevel * 2;
         regenerateObstacles();
         levelDisplay.textContent = 'Level: ' + currentLevel;
+        gameStarted = true;
     } else {
-        // Max level reached
-        alert('Congratulations! You have achieved the maximum level. You are now in the league of legends!');
-        document.location.reload();
+        // max level reached message
+        document.getElementById('messageText').textContent = 'Congratulations! You have achieved the maximum level. You are now in the league of legends!';
+        document.getElementById('continueBtn').textContent = 'Restart';
+        document.getElementById('messageOverlay').style.display = 'flex';
     }
+}
+
+// show overlay when level completes
+function showLevelComplete() {
+    waitingForNextLevel = true;
+    gameStarted = false;
+    document.getElementById('messageText').textContent = `Congratulations on completing Level ${currentLevel}.`;
+    document.getElementById('continueBtn').textContent = (currentLevel < 5 ? `Go to Level ${currentLevel+1}` : 'Finish');
+    document.getElementById('messageOverlay').style.display = 'flex';
 }
 
 // Main game loop function
@@ -244,4 +284,15 @@ document.getElementById('startBtn').addEventListener('click', () => {
     dx = 1;
     dy = 0;
     document.getElementById('startBtn').style.display = 'none';
+});
+
+// continue button for level progression or restart
+const continueBtn = document.getElementById('continueBtn');
+continueBtn.addEventListener('click', () => {
+    if (currentLevel < 5 || (currentLevel === 5 && waitingForNextLevel)) {
+        advanceLevel();
+    } else {
+        // restart after max
+        document.location.reload();
+    }
 });
