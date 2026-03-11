@@ -4,14 +4,14 @@ A classic Snake game implemented in JavaScript with levels and obstacles.
 
 ## Usage
 
-Open `index.html` in a web browser to play the game.
+Open `index.html` in a web browser (desktop or mobile) to play the game.
 
-Use arrow keys to control the snake:
+Use arrow keys (desktop) or on-screen touch buttons (mobile) to move the snake:
 
-- Left arrow: Move left
-- Up arrow: Move up
-- Right arrow: Move right
-- Down arrow: Move down
+- Left arrow / ← button: Move left
+- Up arrow / ↑ button: Move up
+- Right arrow / → button: Move right
+- Down arrow / ↓ button: Move down
 
 The snake wraps around the edges. The game ends if the snake hits an obstacle (gray) or its own body. Score increases by eating red food squares.
 
@@ -23,10 +23,9 @@ The snake wraps around the edges. The game ends if the snake hits an obstacle (g
 - Advance to the next level after eating 5 food items.
 - Upon reaching level 5, you become the "undisputed champion" and can restart.
 
-## Sounds
+## Mobile Support
 
-- Level up: Pleasant high beep.
-- Game over: Harsh low beep.
+The game is fully responsive and works on mobile devices with touch controls. Tap the on-screen arrow buttons to control the snake.
 
 ## Files
 

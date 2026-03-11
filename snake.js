@@ -20,6 +20,7 @@ let currentLevel = 1;
 const foodPerLevel = 5;
 let speed = 150; // milliseconds between moves
 let intervalId;
+let gameStarted = false;
 
 // Initialize the snake as an array of segments, starting with one segment at position (10,10)
 let snake = [{x: 10, y: 10}];
@@ -180,14 +181,16 @@ function levelUp() {
 
 // Main game loop function
 function gameLoop() {
-    // Move the snake
-    moveSnake();
-    // Check for game over conditions
-    if (checkCollision()) {
-        playGameOverSound();
-        alert('Game Over! Score: ' + score);
-        // Reload the page to restart the game
-        document.location.reload();
+    if (gameStarted) {
+        // Move the snake
+        moveSnake();
+        // Check for game over conditions
+        if (checkCollision()) {
+            playGameOverSound();
+            alert('Game Over! Score: ' + score);
+            // Reload the page to restart the game
+            document.location.reload();
+        }
     }
     // Redraw the game
     drawGame();
@@ -202,5 +205,43 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 1; }
 });
 
+// Event listeners for touch controls
+document.getElementById('up').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (dy === 0) { dx = 0; dy = -1; }
+});
+document.getElementById('up').addEventListener('click', (e) => {
+    if (dy === 0) { dx = 0; dy = -1; }
+});
+document.getElementById('down').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (dy === 0) { dx = 0; dy = 1; }
+});
+document.getElementById('down').addEventListener('click', (e) => {
+    if (dy === 0) { dx = 0; dy = 1; }
+});
+document.getElementById('left').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (dx === 0) { dx = -1; dy = 0; }
+});
+document.getElementById('left').addEventListener('click', (e) => {
+    if (dx === 0) { dx = -1; dy = 0; }
+});
+document.getElementById('right').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (dx === 0) { dx = 1; dy = 0; }
+});
+document.getElementById('right').addEventListener('click', (e) => {
+    if (dx === 0) { dx = 1; dy = 0; }
+});
+
 // Start the game loop
 intervalId = setInterval(gameLoop, speed);
+
+// Event listener for start button
+document.getElementById('startBtn').addEventListener('click', () => {
+    gameStarted = true;
+    dx = 1;
+    dy = 0;
+    document.getElementById('startBtn').style.display = 'none';
+});

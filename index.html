@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
     <style>
         body {
@@ -9,38 +10,89 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
+            padding: 10px;
+            box-sizing: border-box;
         }
         h1 {
             margin-bottom: 10px;
             color: #333;
+            font-size: 2em;
         }
         p {
             margin-bottom: 20px;
             text-align: center;
             color: #666;
             max-width: 600px;
+            font-size: 1em;
         }
         canvas {
             border: 5px solid #8B4513;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            max-width: 100%;
+            height: auto;
         }
         #score, #level {
-            font-size: 24px;
+            font-size: 1.5em;
             margin-top: 10px;
             color: #333;
+        }
+        .controls {
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left . right"
+                ". down .";
+            gap: 10px;
+            margin-top: 20px;
+            max-width: 200px;
+        }
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .control-btn:active {
+            background-color: #45a049;
+        }
+        #up { grid-area: up; }
+        #left { grid-area: left; }
+        #right { grid-area: right; }
+        #down { grid-area: down; }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5em; }
+            p { font-size: 0.9em; }
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1em;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Snake Game</h1>
-    <p>Use arrow keys to move the snake. Eat the red food to grow, score points, and advance levels. Avoid gray obstacles and your own body!</p>
+    <p>Use arrow keys (desktop) or touch controls (mobile) to move the snake. Click "Start Game" to begin. Eat the red food to grow, score points, and advance levels. Avoid gray obstacles and your own body!</p>
     <canvas id="gameCanvas" width="600" height="400"></canvas>
     <div id="score">Score: 0</div>
     <div id="level">Level: 1</div>
+    <button id="startBtn" class="control-btn" style="width: 100px; margin-bottom: 10px;">Start Game</button>
+    <div class="controls">
+        <button class="control-btn" id="up">↑</button>
+        <button class="control-btn" id="left">←</button>
+        <button class="control-btn" id="right">→</button>
+        <button class="control-btn" id="down">↓</button>
+    </div>
     <script src="snake.js"></script>
 </body>
 </html>
